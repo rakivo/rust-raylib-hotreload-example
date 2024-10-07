@@ -35,7 +35,7 @@ unsafe fn start() {
     #[cfg(feature = "native")]
     let mut game_frame = load_fn::<Symbol::<GameFrame>>(&lib, "game_frame");
 
-	let mut state = game_init();
+    let mut state = game_init();
     while !WindowShouldClose() {
         #[cfg(feature = "native")]
         if IsKeyPressed(Key::R) {
@@ -44,10 +44,10 @@ unsafe fn start() {
             lib = load_lib(GAME_PATH);
             game_frame = load_fn(&lib, "game_frame");
         }
-		game_frame(&mut state);
-	}
+        game_frame(&mut state);
+    }
 }
 
 fn main() {
-	unsafe { start() }
+    unsafe { start() }
 }
