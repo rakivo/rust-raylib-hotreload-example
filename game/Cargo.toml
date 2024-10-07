@@ -3,8 +3,13 @@ name = "game"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+web = ["raylib-wasm/web"]
+native = ["raylib-wasm/native"]
+
 [dependencies]
-raylib-light = "0.0.1"
+raylib-wasm = { version = "0.0.6", default-features = false }
+# raylib-wasm = { path = "../raylib-wasm", default-features = false }
 
 [lib]
 path = "game.rs"
