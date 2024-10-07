@@ -1,0 +1,14 @@
+[package]
+name = "raylib-hotreload-template"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[dependencies]
+libloading = "0.8.3"
+raylib-light = "0.0.1"
+plug = { path = "plug" }
+
+[[bin]]
+name = "rakivo"
+path = "main.rs"
