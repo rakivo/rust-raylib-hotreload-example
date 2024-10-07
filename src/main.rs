@@ -1,6 +1,8 @@
 #[cfg(feature = "native")]
 use libloading::{Library, Symbol};
-use raylib_wasm::{*, KeyboardKey as Key};
+use raylib_wasm::*;
+#[cfg(feature = "native")]
+use raylib_wasm::KeyboardKey as Key;
 
 use game::*;
 
@@ -13,14 +15,14 @@ const GAME_PATH: &str = if cfg!(target_os = "linux") {
     "./target/debug/libgame.dylib"
 };
 
-#[cfg(feature = "native")]
 #[inline]
+#[cfg(feature = "native")]
 unsafe fn load_lib(file_path: &str) -> Library {
     Library::new(file_path).expect("failed to load the library")
 }
 
-#[cfg(feature = "native")]
 #[inline]
+#[cfg(feature = "native")]
 unsafe fn load_fn<'lib, T>(lib: &'lib Library, symbol: &str) -> Symbol::<'lib, T> {
     lib.get(symbol.as_bytes()).map_err(|err| {
         eprintln!("{err}"); err
