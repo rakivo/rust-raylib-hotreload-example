@@ -15,7 +15,6 @@ pub struct State {
 pub unsafe fn game_init() -> State {
     SetTargetFPS(144);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, cstr!("Game"));
-    SetExitKey(KEY::Q);
 
     State {
         rect: Rectangle {
@@ -28,24 +27,6 @@ pub unsafe fn game_init() -> State {
     }
 }
 
-pub type GameFrame = unsafe fn(state: &mut State);
-
-#[no_mangle]
-pub unsafe fn game_frame(state: &mut State) {
-    handle_keys(state);
-    BeginDrawing();
-        ClearBackground(DARKGRAY);
-        DrawFPS(0, 0);
-        DrawText(cstr!("omg tf is happening"), 250, 500, 50, WHITE);
-        DrawRectangleRec(state.rect, WHITE);
-    EndDrawing();
-}
-
-#[no_mangle]
-pub unsafe fn game_over() {
-    CloseWindow();
-}
-
 unsafe fn handle_keys(state: &mut State) {
     let dt = GetFrameTime();
     if IsKeyDown(KEY::Space) { state.speed = SPEED_BOOSTED; }
@@ -54,4 +35,21 @@ unsafe fn handle_keys(state: &mut State) {
     if IsKeyDown(KEY::A) { state.rect.x -= dt*state.speed; }
     if IsKeyDown(KEY::S) { state.rect.y += dt*state.speed; }
     if IsKeyDown(KEY::D) { state.rect.x += dt*state.speed; }
+}
+
+pub type GameFrame = unsafe fn(state: &mut State);
+
+#[no_mangle]
+pub unsafe fn game_frame(state: &mut State) {
+    handle_keys(state);
+    BeginDrawing();
+        ClearBackground(DARKGREEN);
+        DrawText(cstr!("hello world"), 250, 500, 50, RAYWHITE);
+        DrawRectangleRec(state.rect, RAYWHITE);
+    EndDrawing();
+}
+
+#[no_mangle]
+pub unsafe fn game_over() {
+    CloseWindow();
 }

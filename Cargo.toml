@@ -7,8 +7,8 @@ build = "build.rs"
 [dependencies]
 libloading = "0.8.3"
 raylib-light = "0.0.1"
-plug = { path = "plug" }
+game = { path = "game" }
 
 [[bin]]
-name = "rakivo"
+name = "raylib-hotreload-template"
 path = "main.rs"

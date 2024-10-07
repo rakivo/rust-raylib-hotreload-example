@@ -1,36 +1,44 @@
 use libloading::{Library, Symbol};
 use raylib_light::{*, KeyboardKey as Key};
 
-use plug::*;
+use game::*;
 
-const PLUG_PATH: &str = if cfg!(target_os = "linux") {
-    "./target/debug/libplug.so"
+const GAME_PATH: &str = if cfg!(target_os = "linux") {
+    "./target/debug/libgame.so"
 } else if cfg!(target_os = "windows") {
-    ".\\target\\debug\\libplug.dll"
+    ".\\target\\debug\\libgame.dll"
 } else {
-    "./target/debug/libplug.dylib"
+    "./target/debug/libgame.dylib"
 };
 
-unsafe fn main_() {
-    let mut lib = unsafe { Library::new(PLUG_PATH).expect("failed to load the library") };
-    let mut game_frame: Symbol::<GameFrame> = unsafe {
-        lib.get(b"game_frame").expect("could not find `game_frame` function")
-    };
+#[inline]
+unsafe fn load_lib(file_path: &str) -> Library {
+    Library::new(file_path).expect("failed to load the library")
+}
+
+#[inline]
+unsafe fn load_fn<'lib, T>(lib: &'lib Library, symbol: &str) -> Symbol::<'lib, T> {
+    lib.get(symbol.as_bytes()).map_err(|err| {
+        eprintln!("{err}"); err
+    }).unwrap()
+}
+
+unsafe fn start() {
+    let mut lib = load_lib(GAME_PATH);
+    let mut game_frame = load_fn::<Symbol::<GameFrame>>(&lib, "game_frame");
 
 	let mut state = game_init();
     while !WindowShouldClose() {
         if IsKeyPressed(Key::R) {
             drop(game_frame);
             drop(lib);
-            lib = unsafe { Library::new(PLUG_PATH).expect("failed to load the library") };
-            game_frame = unsafe {
-                lib.get(b"game_frame").expect("could not find `game_frame` function")
-            };
+            lib = load_lib(GAME_PATH);
+            game_frame = load_fn(&lib, "game_frame");
         }
 		game_frame(&mut state);
 	}
 }
 
 fn main() {
-	unsafe { main_() }
+	unsafe { start() }
 }
