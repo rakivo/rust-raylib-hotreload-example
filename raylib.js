@@ -230,13 +230,7 @@ WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
                 ctx.fillText(lines[i], posX, posY + fontSize + (i * fontSize));
             }
         },
-        DrawRectangle_: (posX, posY, width, height, color_ptr) => {
-            const buffer = wf.memory.buffer;
-            const color = getColorFromMemory(buffer, color_ptr);
-            ctx.fillStyle = color;
-            ctx.fillRect(posX, posY, width, height);
-        },
-        DrawLine: (startPosX, startPosY, endPosX, endPosY, color_ptr) => {
+        DrawLine_: (startPosX, startPosY, endPosX, endPosY, color_ptr) => {
             const buffer = wf.memory.buffer;
             const color = getColorFromMemory(buffer, color_ptr);
             ctx.fillStyle = color;
@@ -246,7 +240,13 @@ WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
             ctx.strokeStyle = color;
             ctx.stroke();
         },
-        DrawRectangleV: (position_ptr, size_ptr, color_ptr) => {
+        DrawRectangle_: (posX, posY, width, height, color_ptr) => {
+            const buffer = wf.memory.buffer;
+            const color = getColorFromMemory(buffer, color_ptr);
+            ctx.fillStyle = color;
+            ctx.fillRect(posX, posY, width, height);
+        },
+        DrawRectangleV_: (position_ptr, size_ptr, color_ptr) => {
             const buffer = wf.memory.buffer;
             const [x, y] = new Float32Array(buffer, position_ptr, 2);
             const [width, height] = new Float32Array(buffer, size_ptr, 2);
