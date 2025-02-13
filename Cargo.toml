@@ -5,8 +5,8 @@ edition = "2021"
 build = "build.rs"
 
 [features]
-web = ["raylib-wasm/web"]
-native = ["raylib-wasm/native"]
+web = ["raylib-wasm/web", "game/web"]
+native = ["raylib-wasm/native", "game/native"]
 
 [dependencies]
 libloading = "0.8.3"

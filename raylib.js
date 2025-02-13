@@ -175,7 +175,59 @@ const keyUp = (e) => {
 }
 
 const game = document.getElementById("game");
+var container = game.parentElement; // parent div
 const ctx = game.getContext("2d");
+
+game.onmousemove = handleMouseMove;
+
+function handleMouseMove(event) {
+    var rect = container.getBoundingClientRect();
+    var xf = event.offsetX / rect.width;
+    var yf = event.offsetY / rect.height;
+    game.mouseX = xf * game.width;
+    game.mouseY = yf * game.height;
+}
+
+var SCALE_TO_FIT = true;
+var WIDTH = 800;
+var HEIGHT = 600;
+
+function onResize() {
+    var w;
+    var h;
+
+    if (SCALE_TO_FIT) {
+        w = window.innerWidth;
+        h = window.innerHeight;
+
+        var r = HEIGHT / WIDTH;
+
+        if (w * r > window.innerHeight) {
+            w = Math.min(w, Math.ceil(h / r));
+        }
+        h = Math.floor(w * r);
+    } else {
+        w = WIDTH;
+        h = HEIGHT;
+    }
+
+    container.style.width = game.style.width = w + "px";
+    container.style.height = game.style.height = h + "px";
+    container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+    container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+}
+window.addEventListener('resize', onResize);
+
+onResize();
+
+if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    // Mobile device style: fill the whole browser client area with the game canvas:
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+}
+
 
 let images = []
 
@@ -190,6 +242,8 @@ const GetFPS = () => 1.0 / dt;
 
 WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
     "env": make_environment({
+        GetMousePositionX_: () => game.mouseX,
+        GetMousePositionY_: () => game.mouseY,
         InitWindow: (w, h, t) => {
             game.width = w;
             game.height = h;
@@ -261,6 +315,14 @@ WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
             ctx.fillStyle = color;
             ctx.fillRect(x, y, w, h);
         },
+        DrawCircle_: (centerX, centerY, radius, color_ptr) => {
+            const buffer = wf.memory.buffer;
+            const color = getColorFromMemory(buffer, color_ptr);
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, 0);
+            ctx.fill();
+        },
         // DrawTexture: (id, x, y, color_ptr) => {
         //     console.log(x, y, id);
         //     const img = images[id];
@@ -313,7 +375,7 @@ WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
 }).then(w => {
     wasm = w;
     wf = w.instance.exports;
-    console.log(w);
+    // console.log(w);
 
     window.addEventListener("keydown", keyDown);
     window.addEventListener("keyup", keyUp);

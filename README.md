@@ -13,4 +13,4 @@ $ python -m http.server
 $ <browser> http://0.0.0.0:8000/
 ```
 
-# More about the library: <https://github.com/rakivo/raylib-wasm>
+*More about the library*: <https://github.com/rakivo/raylib-wasm>
