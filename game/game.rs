@@ -45,6 +45,12 @@ unsafe fn handle_mouse(state: &mut State) {
 
 pub type GameFrame = unsafe fn(state: &mut State);
 
+macro_rules! cstr {
+    ($($arg: tt)*) => {
+        std::ffi::CString::new(format!($($arg)*)).unwrap()
+    }
+}
+
 #[no_mangle]
 pub unsafe fn game_frame(state: &mut State) {
     handle_keys(state);
@@ -63,14 +69,14 @@ pub unsafe fn game_frame(state: &mut State) {
             x = state.rect.x.round(),
             y = state.rect.y.round()
         };
-        DrawText(rect_pos, 10, 10, 20, RAYWHITE);
+        DrawText(rect_pos.as_ptr(), 10, 10, 20, RAYWHITE);
 
         let mouse_pos = cstr!{
             "mouse: [{x}, {y}]",
             x = state.mouse_pos.x.round(),
             y = state.mouse_pos.y.round()
         };
-        DrawText(mouse_pos, 10, 30, 20, RAYWHITE);
+        DrawText(mouse_pos.as_ptr(), 10, 30, 20, RAYWHITE);
 
         DrawCircle(state.mouse_pos.x as i32, state.mouse_pos.y as i32, 10.0, RAYWHITE);
     } EndDrawing();
