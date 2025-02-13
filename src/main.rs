@@ -12,7 +12,7 @@ const GAME_PATH: &str = if cfg!(target_os = "linux") {
 } else if cfg!(target_os = "windows") {
     ".\\target\\debug\\libgame.dll"
 } else {
-    "./target/debug/libgame.dylib"
+    "./target/debug/deps/libgame.dylib"
 };
 
 #[inline]
