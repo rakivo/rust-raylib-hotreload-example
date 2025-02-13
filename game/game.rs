@@ -15,7 +15,7 @@ pub struct State {
 #[no_mangle]
 pub unsafe fn game_init() -> State {
     SetTargetFPS(144);
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, cstr!("Game"));
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, c"Game".as_ptr());
 
     State {
         rect: Rectangle {
@@ -50,17 +50,30 @@ pub unsafe fn game_frame(state: &mut State) {
     handle_keys(state);
     handle_mouse(state);
 
-    BeginDrawing();
+    BeginDrawing(); {
         ClearBackground(DARKGREEN);
-        DrawText(cstr!("hello world"), 250, 500, 50, RAYWHITE);
+        DrawText(c"hello world".as_ptr(), 250, 500, 50, RAYWHITE);
+
         DrawRectangleRec(state.rect, RAYWHITE);
+
         DrawFPS(WINDOW_WIDTH - 100, 10);
-        let text = format!("rect: [{}, {}]", state.rect.x.round(), state.rect.y.round());
-        DrawText(cstr!(text), 10, 10, 20, RAYWHITE);
-        let text = format!("mouse: [{}, {}]", state.mouse_pos.x.round(), state.mouse_pos.y.round());
-        DrawText(cstr!(text), 10, 30, 20, RAYWHITE);
+
+        let rect_pos = cstr!{
+            "rect: [{x}, {y}]",
+            x = state.rect.x.round(),
+            y = state.rect.y.round()
+        };
+        DrawText(rect_pos, 10, 10, 20, RAYWHITE);
+
+        let mouse_pos = cstr!{
+            "mouse: [{x}, {y}]",
+            x = state.mouse_pos.x.round(),
+            y = state.mouse_pos.y.round()
+        };
+        DrawText(mouse_pos, 10, 30, 20, RAYWHITE);
+
         DrawCircle(state.mouse_pos.x as i32, state.mouse_pos.y as i32, 10.0, RAYWHITE);
-    EndDrawing();
+    } EndDrawing();
 }
 
 #[no_mangle]
