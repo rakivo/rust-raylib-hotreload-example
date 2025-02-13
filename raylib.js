@@ -175,8 +175,18 @@ const keyUp = (e) => {
 }
 
 const game = document.getElementById("game");
+var container = game.parentElement; // parent div
 const ctx = game.getContext("2d");
 
+game.onmousemove = handleMouseMove;
+
+function handleMouseMove(event) {
+    var rect = container.getBoundingClientRect();
+    var xf = event.offsetX / rect.width;
+    var yf = event.offsetY / rect.height;
+    game.mouseX = xf * game.width;
+    game.mouseY = yf * game.height;
+}
 let images = []
 
 let wasm = undefined;
@@ -190,6 +200,8 @@ const GetFPS = () => 1.0 / dt;
 
 WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
     "env": make_environment({
+        GetMousePositionX_: () => game.mouseX,
+        GetMousePositionY_: () => game.mouseY,
         InitWindow: (w, h, t) => {
             game.width = w;
             game.height = h;
