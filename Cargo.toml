@@ -11,5 +11,5 @@ native = ["raylib-wasm/native", "game/native"]
 [dependencies]
 libloading = "0.8.3"
 game = { path = "game" }
-raylib-wasm = { version = "0.0.13", default-features = false }
+raylib-wasm = { version = "0.0.16", default-features = false }
 # raylib-wasm = { path = "raylib-wasm", default-features = false }

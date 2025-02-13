@@ -8,11 +8,11 @@ use game::*;
 
 #[cfg(feature = "native")]
 const GAME_PATH: &str = if cfg!(target_os = "linux") {
-    "./target/debug/libgame.so"
+    "./target/debug/deps/libgame.so"
 } else if cfg!(target_os = "windows") {
-    ".\\target\\debug\\libgame.dll"
+    ".\\target\\debug\\deps\\libgame.dll"
 } else {
-    "./target/debug/libgame.dylib"
+    "./target/debug/deps/libgame.dylib"
 };
 
 #[inline]

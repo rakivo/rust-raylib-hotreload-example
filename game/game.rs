@@ -58,19 +58,19 @@ pub unsafe fn game_frame(state: &mut State) {
 
         DrawFPS(WINDOW_WIDTH - 100, 10);
 
-        let rect_pos = cstr!{
+        let rect_pos = format!{
             "rect: [{x}, {y}]",
             x = state.rect.x.round(),
             y = state.rect.y.round()
         };
-        DrawText(rect_pos, 10, 10, 20, RAYWHITE);
+        DrawText(cstr!(rect_pos), 10, 10, 20, RAYWHITE);
 
-        let mouse_pos = cstr!{
+        let mouse_pos = format!{
             "mouse: [{x}, {y}]",
             x = state.mouse_pos.x.round(),
             y = state.mouse_pos.y.round()
         };
-        DrawText(mouse_pos, 10, 30, 20, RAYWHITE);
+        DrawText(cstr!(mouse_pos), 10, 30, 20, RAYWHITE);
 
         DrawCircle(state.mouse_pos.x as i32, state.mouse_pos.y as i32, 10.0, RAYWHITE);
     } EndDrawing();
