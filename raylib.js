@@ -315,6 +315,14 @@ WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
             ctx.fillStyle = color;
             ctx.fillRect(x, y, w, h);
         },
+        DrawCircle_: (centerX, centerY, radius, color_ptr) => {
+            const buffer = wf.memory.buffer;
+            const color = getColorFromMemory(buffer, color_ptr);
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, 0);
+            ctx.fill();
+        },
         // DrawTexture: (id, x, y, color_ptr) => {
         //     console.log(x, y, id);
         //     const img = images[id];
