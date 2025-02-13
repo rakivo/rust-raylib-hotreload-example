@@ -1,4 +1,4 @@
-use raylib_wasm::{*, KeyboardKey as KEY};
+use raylib_wasm::{KeyboardKey as KEY, *};
 
 const WINDOW_WIDTH: i32 = 800;
 const WINDOW_HEIGHT: i32 = 600;
@@ -15,7 +15,7 @@ pub struct State {
 #[no_mangle]
 pub unsafe fn game_init() -> State {
     SetTargetFPS(144);
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, c"Game".as_ptr());
+    init_window(WINDOW_WIDTH, WINDOW_HEIGHT, "game");
 
     State {
         rect: Rectangle {
@@ -30,13 +30,14 @@ pub unsafe fn game_init() -> State {
 }
 
 unsafe fn handle_keys(state: &mut State) {
+    if IsKeyDown(KEY::Space)  { state.speed = SPEED_BOOSTED }
+    if !IsKeyDown(KEY::Space) { state.speed = SPEED_DEFAULT }
+
     let dt = GetFrameTime();
-    if IsKeyDown(KEY::Space) { state.speed = SPEED_BOOSTED; }
-    if !IsKeyDown(KEY::Space) { state.speed = SPEED_DEFAULT; }
-    if IsKeyDown(KEY::W) { state.rect.y -= dt*state.speed; }
-    if IsKeyDown(KEY::A) { state.rect.x -= dt*state.speed; }
-    if IsKeyDown(KEY::S) { state.rect.y += dt*state.speed; }
-    if IsKeyDown(KEY::D) { state.rect.x += dt*state.speed; }
+    if IsKeyDown(KEY::W)      { state.rect.y -= dt*state.speed }
+    if IsKeyDown(KEY::A)      { state.rect.x -= dt*state.speed }
+    if IsKeyDown(KEY::S)      { state.rect.y += dt*state.speed }
+    if IsKeyDown(KEY::D)      { state.rect.x += dt*state.speed }
 }
 
 unsafe fn handle_mouse(state: &mut State) {
@@ -52,7 +53,7 @@ pub unsafe fn game_frame(state: &mut State) {
 
     BeginDrawing(); {
         ClearBackground(DARKGREEN);
-        DrawText(c"hello world".as_ptr(), 250, 500, 50, RAYWHITE);
+        draw_text("hello world", 250, 500, 50, RAYWHITE);
 
         DrawRectangleRec(state.rect, RAYWHITE);
 
@@ -63,14 +64,14 @@ pub unsafe fn game_frame(state: &mut State) {
             x = state.rect.x.round(),
             y = state.rect.y.round()
         };
-        DrawText(cstr!(rect_pos), 10, 10, 20, RAYWHITE);
+        draw_text(&rect_pos, 10, 10, 20, RAYWHITE);
 
         let mouse_pos = format!{
             "mouse: [{x}, {y}]",
             x = state.mouse_pos.x.round(),
             y = state.mouse_pos.y.round()
         };
-        DrawText(cstr!(mouse_pos), 10, 30, 20, RAYWHITE);
+        draw_text(&mouse_pos, 10, 30, 20, RAYWHITE);
 
         DrawCircle(state.mouse_pos.x as i32, state.mouse_pos.y as i32, 10.0, RAYWHITE);
     } EndDrawing();
