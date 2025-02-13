@@ -7,13 +7,23 @@ use raylib_wasm::KeyboardKey as Key;
 use game::*;
 
 #[cfg(feature = "native")]
-const GAME_PATH: &str = if cfg!(target_os = "linux") {
-    "./target/debug/deps/libgame.so"
-} else if cfg!(target_os = "windows") {
-    ".\\target\\debug\\deps\\libgame.dll"
-} else {
-    "./target/debug/deps/libgame.dylib"
-};
+const fn get_game_path() -> &'static str {
+    #[cfg(target_os = "linux")] {
+        if cfg!(debug_assertions) { concat!("./target/debug/deps/libgame.so") }
+        else { concat!("./target/release/deps/libgame.so") }
+    }
+    #[cfg(target_os = "windows")] {
+        if cfg!(debug_assertions) { ".\\target\\debug\\deps\\libgame.dll"}
+        else { ".\\target\\release\\deps\\libgame.dll" }
+    }
+    #[cfg(not(any(target_os = "windows", target_os = "linux")))] {
+        if cfg!(debug_assertions) { "./target/debug/deps/libgame.dylib" }
+        else { "./target/release/deps/libgame.dylib" }
+    }
+}
+
+#[cfg(feature = "native")]
+const GAME_PATH: &str = get_game_path();
 
 #[inline]
 #[cfg(feature = "native")]
