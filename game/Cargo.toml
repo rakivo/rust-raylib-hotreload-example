@@ -13,4 +13,4 @@ raylib-wasm = { version = "0.0.10", default-features = false }
 
 [lib]
 path = "game.rs"
-crate-type = ["dylib", "lib"]
+crate-type = ["cdylib", "lib"]
