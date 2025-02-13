@@ -187,6 +187,48 @@ function handleMouseMove(event) {
     game.mouseX = xf * game.width;
     game.mouseY = yf * game.height;
 }
+
+var SCALE_TO_FIT = true;
+var WIDTH = 800;
+var HEIGHT = 600;
+
+function onResize() {
+    var w;
+    var h;
+
+    if (SCALE_TO_FIT) {
+        w = window.innerWidth;
+        h = window.innerHeight;
+
+        var r = HEIGHT / WIDTH;
+
+        if (w * r > window.innerHeight) {
+            w = Math.min(w, Math.ceil(h / r));
+        }
+        h = Math.floor(w * r);
+    } else {
+        w = WIDTH;
+        h = HEIGHT;
+    }
+
+    container.style.width = game.style.width = w + "px";
+    container.style.height = game.style.height = h + "px";
+    container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+    container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+}
+window.addEventListener('resize', onResize);
+
+onResize();
+
+if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    // Mobile device style: fill the whole browser client area with the game canvas:
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+}
+
+
 let images = []
 
 let wasm = undefined;
