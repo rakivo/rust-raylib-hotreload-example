@@ -375,7 +375,7 @@ WebAssembly.instantiateStreaming(fetch(WASM_PATH), {
 }).then(w => {
     wasm = w;
     wf = w.instance.exports;
-    console.log(w);
+    // console.log(w);
 
     window.addEventListener("keydown", keyDown);
     window.addEventListener("keyup", keyUp);
